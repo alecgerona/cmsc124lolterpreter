@@ -1,0 +1,6 @@
+/home/altus/sample/sample/obj/x86/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
+/home/altus/sample/sample/obj/x86/Debug/sample.gtk-gui.gui.stetic
+/home/altus/sample/sample/bin/Debug/sample.exe.mdb
+/home/altus/sample/sample/bin/Debug/sample.exe
+/home/altus/sample/sample/obj/x86/Debug/sample.exe
+/home/altus/sample/sample/obj/x86/Debug/sample.exe.mdb
