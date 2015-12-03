@@ -197,36 +197,36 @@ public partial class MainWindow: Gtk.Window
 		symboltreeview.Model = sym;
 
 		//Keyword regexes
-		Regex start = new Regex (startregex, RegexOptions.IgnoreCase);
-		Regex vardec = new Regex (hairegex, RegexOptions.IgnoreCase);
-		Regex print = new Regex (visibleregex, RegexOptions.IgnoreCase);
-		Regex comment = new Regex (commentregex, RegexOptions.IgnoreCase);
-		Regex endcomment = new Regex (endcommentregex, RegexOptions.IgnoreCase);
-		Regex end = new Regex (endregex, RegexOptions.IgnoreCase);
-		Regex add = new Regex (addregex, RegexOptions.IgnoreCase);
-		Regex sub = new Regex (subregex, RegexOptions.IgnoreCase);
-		Regex mul = new Regex (mulregex, RegexOptions.IgnoreCase);
-		Regex div = new Regex (divregex, RegexOptions.IgnoreCase);
-		Regex mod = new Regex (modregex, RegexOptions.IgnoreCase);
-		Regex big = new Regex (biggrregex, RegexOptions.IgnoreCase);
-		Regex small = new Regex (smallrregex, RegexOptions.IgnoreCase);
-		Regex both = new Regex (bothofregex, RegexOptions.IgnoreCase);
-		Regex either = new Regex (eitherofregex, RegexOptions.IgnoreCase);
-		Regex won = new Regex (wonofregex, RegexOptions.IgnoreCase);
-		Regex not = new Regex (notregex, RegexOptions.IgnoreCase);
-		Regex allof = new Regex (allofregex, RegexOptions.IgnoreCase);
-		Regex anyof = new Regex (anyofregex, RegexOptions.IgnoreCase);
-		Regex bothsaem = new Regex (bothsaemregex, RegexOptions.IgnoreCase);
-		Regex diffrint = new Regex (diffrintregex, RegexOptions.IgnoreCase);
+		Regex start = new Regex (startregex);
+		Regex vardec = new Regex (hairegex);
+		Regex print = new Regex (visibleregex);
+		Regex comment = new Regex (commentregex);
+		Regex endcomment = new Regex (endcommentregex);
+		Regex end = new Regex (endregex);
+		Regex add = new Regex (addregex);
+		Regex sub = new Regex (subregex);
+		Regex mul = new Regex (mulregex);
+		Regex div = new Regex (divregex);
+		Regex mod = new Regex (modregex);
+		Regex big = new Regex (biggrregex);
+		Regex small = new Regex (smallrregex);
+		Regex both = new Regex (bothofregex);
+		Regex either = new Regex (eitherofregex);
+		Regex won = new Regex (wonofregex);
+		Regex not = new Regex (notregex);
+		Regex allof = new Regex (allofregex);
+		Regex anyof = new Regex (anyofregex);
+		Regex bothsaem = new Regex (bothsaemregex);
+		Regex diffrint = new Regex (diffrintregex);
 
 		//Data type regexes
-		Regex numvarwtf = new Regex(numvarwtfregex, RegexOptions.IgnoreCase);
-		Regex vari = new Regex (variregex, RegexOptions.IgnoreCase);
-		Regex numb =new Regex (numregex, RegexOptions.IgnoreCase);
+		Regex numvarwtf = new Regex(numvarwtfregex);
+		Regex vari = new Regex (variregex);
+		Regex numb =new Regex (numregex);
 		Regex str =new Regex (stringregex);
-		Regex gimmeh = new Regex (gimmehregex, RegexOptions.IgnoreCase);
-		Regex ops = new Regex (opsregex, RegexOptions.IgnoreCase);
-		Regex ass = new Regex (assregex, RegexOptions.IgnoreCase);
+		Regex gimmeh = new Regex (gimmehregex);
+		Regex ops = new Regex (opsregex);
+		Regex ass = new Regex (assregex);
 
 		HashSet <string> lexemeHash = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 
@@ -399,6 +399,8 @@ public partial class MainWindow: Gtk.Window
 					sym.Clear ();
 					symboltreeview.Model = sym;
 					varList ["IT"] = perform (codearray [i].ToString ().Replace ("MEBBE ", ""), i + 1, 0); //Evaluate if condition
+					if (varList ["IT"].ToString ().Equals ("Error"))
+						return;
 					foreach (string key in varList.Keys) {
 						sym.AppendValues (key, varList [key]);
 					}
@@ -419,6 +421,7 @@ public partial class MainWindow: Gtk.Window
 					sym.Clear ();
 					symboltreeview.Model = sym;
 					varList ["IT"] = perform (codearray [i].ToString ().Replace (", O RLY?", ""), i + 1, 0); //Evaluate if condition
+	
 					foreach (string key in varList.Keys) {
 						sym.AppendValues (key, varList [key]);
 					}
@@ -434,6 +437,8 @@ public partial class MainWindow: Gtk.Window
 					sym.Clear ();
 					symboltreeview.Model = sym;
 					varList ["IT"] = perform (codearray [i].ToString ().Replace (", WTF?", ""), i + 1, 0); //Evaluate if condition
+					if (varList ["IT"].ToString ().Equals ("Error"))
+						return;
 					foreach (string key in varList.Keys) {
 						sym.AppendValues (key, varList [key]);
 					}
@@ -445,6 +450,8 @@ public partial class MainWindow: Gtk.Window
 					sym.Clear ();
 					symboltreeview.Model = sym;
 					varList ["IT"] = perform (codearray [i], i + 1, 0).ToString ();
+					if (varList ["IT"].ToString ().Equals ("Error"))
+						return;
 					foreach (string key in varList.Keys) {
 						sym.AppendValues (key, varList [key]);
 					}
@@ -464,9 +471,13 @@ public partial class MainWindow: Gtk.Window
 
 
 			else if (codearray [i].Contains ("OMG")) {//Cases
-				
-				if (varList ["IT"].ToString ().Equals (codearray [i].Replace ("OMG ", ""))) { //Equal value
-					satisfy = true;
+				if (codearray [i].Equals ("OMG") || codearray[i].Equals("OMG ")) {
+					consoletext.Buffer.InsertAtCursor ("Syntax error at linenumber " + linenumber + ": constant value expected at the end of line\n");
+					break;
+				} else {
+					if (varList ["IT"].ToString ().Equals (codearray [i].Replace ("OMG ", ""))) { //Equal value
+						satisfy = true;
+					}
 				}
 				
 			} else if (codearray [i].Contains ("GTFO")) { //Break function
@@ -506,10 +517,10 @@ public partial class MainWindow: Gtk.Window
 		string numregex = @"(-?[0-9]*\.?[0-9]+)";
 		string stringregex ="(\")(.*)(\")";
 		string opsregex = "(SUM OF)|(DIFF OF)|(PRODUKT OF)|(QUOSHUNT OF)|(MOD OF)|(BIGGR OF)|(SMALLR OF)|(AN)";
-		Regex vari = new Regex (variregex, RegexOptions.IgnoreCase);
-		Regex numb =new Regex (numregex, RegexOptions.IgnoreCase);
-		Regex str = new Regex (stringregex, RegexOptions.IgnoreCase);
-		Regex ops = new Regex (opsregex, RegexOptions.IgnoreCase);
+		Regex vari = new Regex (variregex);
+		Regex numb =new Regex (numregex);
+		Regex str = new Regex (stringregex);
+		Regex ops = new Regex (opsregex);
 		string[] splitarray;
 
 		lex.AppendValues (m.Groups [1].ToString (), library ["I HAS A"]);
@@ -523,7 +534,11 @@ public partial class MainWindow: Gtk.Window
 
 
 		if (m.Groups [3].ToString ().Equals ("ITZ")) { //Assignment operation
-			if (isNumb (m.Groups [4].ToString (), numb) && !isVar (m.Groups [4].ToString (), vari) && !isOps (m.Groups [4].ToString (), ops) && !isComparison(m.Groups[4].ToString())) { //Assign a number
+			if (m.Groups [4].ToString ().Equals ("")) {
+				syntaxError (linenumber);
+				return;
+			}
+			else if (isNumb (m.Groups [4].ToString (), numb) && !isVar (m.Groups [4].ToString (), vari) && !isOps (m.Groups [4].ToString (), ops) && !isComparison(m.Groups[4].ToString())) { //Assign a number
 				varList.Add (m.Groups [2].ToString (), m.Groups [4].ToString ());
 
 				sym.AppendValues (m.Groups [2].ToString (), m.Groups [4].ToString ());
@@ -576,6 +591,8 @@ public partial class MainWindow: Gtk.Window
 
 				caller = 5;
 				varList.Add (m.Groups [2].ToString (), perform (codearray [linenumber - 1], linenumber, caller).ToString ());
+				if (varList [m.Groups[2].ToString()].ToString ().Equals ("Error"))
+					return;
 				sym.AppendValues(m.Groups[2].ToString(), perform(codearray[linenumber-1], linenumber, caller).ToString());
 				symboltreeview.Model = sym;
 
@@ -586,6 +603,8 @@ public partial class MainWindow: Gtk.Window
 
 				caller = 5;
 				varList.Add (m.Groups [2].ToString (), perform (codearray [linenumber - 1], linenumber, caller).ToString ());
+				if (varList [m.Groups[2].ToString()].ToString ().Equals ("Error"))
+					return;
 				sym.AppendValues(m.Groups[2].ToString(), perform(codearray[linenumber-1], linenumber, caller).ToString());
 				symboltreeview.Model = sym;
 
@@ -662,10 +681,10 @@ public partial class MainWindow: Gtk.Window
 		string numregex = @"(-?[0-9]*\.?[0-9]+)";
 		string stringregex ="(\")(.*)(\")";
 		string opsregex = "(SUM OF)|(DIFF OF)|(PRODUKT OF)|(QUOSHUNT OF)|(MOD OF)|(BIGGR OF)|(SMALLR OF)|(AN)";
-		Regex vari = new Regex (variregex, RegexOptions.IgnoreCase);
-		Regex numb =new Regex (numregex, RegexOptions.IgnoreCase);
-		Regex str = new Regex (stringregex, RegexOptions.IgnoreCase);
-		Regex ops = new Regex (opsregex, RegexOptions.IgnoreCase);
+		Regex vari = new Regex (variregex);
+		Regex numb =new Regex (numregex);
+		Regex str = new Regex (stringregex);
+		Regex ops = new Regex (opsregex);
 		string[] splitarray;
 
 		if (isNumb (assmatch.Groups [3].ToString (), numb) && !isVar (assmatch.Groups [3].ToString (), vari) && !isOps (assmatch.Groups [3].ToString (), ops) && !isComparison(assmatch.Groups[3].ToString())) { //Assign a number
@@ -761,7 +780,7 @@ public partial class MainWindow: Gtk.Window
 
 		} else if (isAnyAll(assmatch.Groups[3].ToString())) { //ANY ALL & AND ALL Boolean operations
 
-			label1.Text = "isanyall";
+			//label1.Text = "isanyall";
 			caller = 2;
 			sym.Clear ();
 			symboltreeview.Model = sym;
@@ -855,15 +874,15 @@ public partial class MainWindow: Gtk.Window
 		string numregex = @"(-?[0-9]*\.?[0-9]+)";
 		string stringregex ="(\")(.*)(\")";
 		string opsregex = "(SUM OF)|(DIFF OF)|(PRODUKT OF)|(QUOSHUNT OF)|(MOD OF)|(BIGGR OF)|(SMALLR OF)|(AN)";
-		Regex vari = new Regex (variregex, RegexOptions.IgnoreCase);
-		Regex numb =new Regex (numregex, RegexOptions.IgnoreCase);
-		Regex str = new Regex (stringregex, RegexOptions.IgnoreCase);
-		Regex ops = new Regex (opsregex, RegexOptions.IgnoreCase);
+		Regex vari = new Regex (variregex);
+		Regex numb =new Regex (numregex);
+		Regex str = new Regex (stringregex);
+		Regex ops = new Regex (opsregex);
 		string[] splitarray;
 
 		if (isNumb (printmatch.Groups [2].ToString (), numb) && !isVar (printmatch.Groups [2].ToString (), vari) && !isOps (printmatch.Groups [2].ToString (), ops) && !isComparison (printmatch.Groups [2].ToString ())) { //Assign a number
 
-			consoletext.Buffer.InsertAtCursor (printmatch.Groups [2].ToString ());
+			consoletext.Buffer.InsertAtCursor (printmatch.Groups [2].ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Printing Keyword");
 			lex.AppendValues (printmatch.Groups [2].ToString (), "Number Literal");
 
@@ -879,7 +898,7 @@ public partial class MainWindow: Gtk.Window
 			}
 
 
-			consoletext.Buffer.InsertAtCursor (varList[printmatch.Groups [2].ToString ()].ToString());
+			consoletext.Buffer.InsertAtCursor (varList[printmatch.Groups [2].ToString ()].ToString()+"\n");
 
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 			lex.AppendValues (printmatch.Groups [2].ToString (), "Variable");
@@ -887,26 +906,26 @@ public partial class MainWindow: Gtk.Window
 		} else if (isString (printmatch.Groups [2].ToString (), str) && !isOps (printmatch.Groups [2].ToString (), ops)) { //Assigns a string to the destination variable
 
 			Match isStr = str.Match (printmatch.Groups [2].ToString ());
-			lex.AppendValues (printmatch.Groups [1].ToString (), "Variable");
-			lex.AppendValues (printmatch.Groups [2].ToString (), "Assignment indicator");
+			lex.AppendValues (printmatch.Groups [1].ToString (), "Print keyword");
+			//lex.AppendValues (printmatch.Groups [2].ToString (), "Assignment indicator");
 			lex.AppendValues (isStr.Groups [1].ToString (), "String Delimiter");
 			lex.AppendValues (isStr.Groups [2].ToString (), "String Literal");
 			lex.AppendValues (isStr.Groups [3].ToString (), "String Delimiter");
-			consoletext.Buffer.InsertAtCursor (isStr.Groups [2].ToString ());
+			consoletext.Buffer.InsertAtCursor (isStr.Groups [2].ToString ()+"\n");
 			treeview1.Model = lex;
 
 
 
 		} else if (printmatch.Groups [2].ToString ().Equals ("WIN") || printmatch.Groups [2].ToString ().Equals ("FAIL")) { //Boolean
 
-			consoletext.Buffer.InsertAtCursor (printmatch.Groups [2].ToString ());
+			consoletext.Buffer.InsertAtCursor (printmatch.Groups [2].ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 			lex.AppendValues (printmatch.Groups [2].ToString (), "Boolean Literal");
 
 			treeview1.Model = lex;
 		} else if (isComparison(printmatch.Groups[2].ToString())) { //Comparisons
 			caller = 1;
-			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ());
+			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 
 
@@ -914,7 +933,7 @@ public partial class MainWindow: Gtk.Window
 		} else if (isAnyAll(printmatch.Groups[2].ToString())) { //ANY ALL & AND ALL Boolean operations
 
 			caller = 1;
-			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ());
+			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 
 
@@ -924,7 +943,7 @@ public partial class MainWindow: Gtk.Window
 		} else if (isBool(printmatch.Groups[2].ToString())) { //Boolean operations
 			caller = 1;
 
-			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ());
+			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 
 
@@ -959,7 +978,7 @@ public partial class MainWindow: Gtk.Window
 
 			caller = 1;
 
-			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ());
+			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 
 
@@ -990,9 +1009,9 @@ public partial class MainWindow: Gtk.Window
 		string variregex = "([a-zA-Z][a-zA-Z0-9]*)";
 		string numregex = @"(-?[0-9]*\.?[0-9]+)";
 		string stringregex ="(\")(.*)(\")";
-		Regex vari = new Regex (variregex, RegexOptions.IgnoreCase);
-		Regex numb =new Regex (numregex, RegexOptions.IgnoreCase);
-		Regex str = new Regex (stringregex, RegexOptions.IgnoreCase);
+		Regex vari = new Regex (variregex);
+		Regex numb =new Regex (numregex);
+		Regex str = new Regex (stringregex);
 		string[] slice = expression.Split (' ');
 		int testcase = 0;
 		int trueorfalse = 0;
@@ -1029,11 +1048,12 @@ public partial class MainWindow: Gtk.Window
 				operation.Push (!op1);
 
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("SUM")) {//ADD
-				try{
+		
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1047,17 +1067,18 @@ public partial class MainWindow: Gtk.Window
 						opd2 = Convert.ToDouble (changer);
 					}
 					operation.Push (opd1 + opd2);
-				} catch(Exception){
-					syntaxError (linenumber);
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 
 				i++;
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("DIFF")) {//DIFF
-				try{
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1071,16 +1092,17 @@ public partial class MainWindow: Gtk.Window
 						opd2 = Convert.ToDouble (changer);
 					}
 					operation.Push (opd1 - opd2);
-				} catch(Exception){
-					syntaxError (linenumber);
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 				i++;
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("PRODUKT")) {//MUL
-				try{
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1094,16 +1116,17 @@ public partial class MainWindow: Gtk.Window
 						opd2 = Convert.ToDouble (changer);
 					}
 					operation.Push (opd1 * opd2);
-				} catch(Exception){
-					syntaxError (linenumber);
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 				i++;
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("QUOSHUNT")) {//DIV
-				try{
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1117,16 +1140,17 @@ public partial class MainWindow: Gtk.Window
 						opd2 = Convert.ToDouble (changer);
 					}
 					operation.Push (opd1 / opd2);
-				} catch(Exception){
-					syntaxError (linenumber);
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 				i++;
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("MOD")) {//MOD
-				try{
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1140,16 +1164,17 @@ public partial class MainWindow: Gtk.Window
 						opd2 = Convert.ToDouble (changer);
 					}
 					operation.Push (opd1 % opd2);
-				} catch(Exception){
-					syntaxError (linenumber);
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 				i++;
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("BIGGR")) {//BIGGR
-				try{
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1162,17 +1187,18 @@ public partial class MainWindow: Gtk.Window
 					} else {
 						opd2 = Convert.ToDouble (changer);
 					}
-					operation.Push (Math.Max(opd1,opd2));
-				} catch(Exception){
-					syntaxError (linenumber);
+					operation.Push (Math.Max (opd1, opd2));
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 				i++;
 			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("SMALLR")) {//SMALLR
-				try{
+				try {
 					changer = operation.Pop ().ToString ();
-					if (changer.Equals("True")) {
+					if (changer.Equals ("True")) {
 						opd1 = 1;
-					} else if (changer.Equals("False")) {
+					} else if (changer.Equals ("False")) {
 						opd1 = 0;
 					} else {
 						opd1 = Convert.ToDouble (changer);
@@ -1185,24 +1211,26 @@ public partial class MainWindow: Gtk.Window
 					} else {
 						opd2 = Convert.ToDouble (changer);
 					}
-					operation.Push (Math.Min(opd1, opd2));
-				} catch(Exception){
-					syntaxError (linenumber);
+					operation.Push (Math.Min (opd1, opd2));
+				} catch (Exception) {
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+					return "Error";
 				}
 				i++;
-			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("ANY")) { //ANY OF
+			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("ANY") && operation.Count != 0) { //ANY OF
+					
 				while (!operation.Peek ().Equals ("MKAY")) {
 					checker.Push (operation.Pop ());
 				}
 				operation.Pop (); //Get rid of the dangling MKAY
-
+				
 				foreach (object test in checker) {
 					if (!Convert.ToBoolean (test)) {
 						
 						testcase++;
 					}
 				}
-				consoletext.Buffer.Text = checker.Count.ToString ();
+				//consoletext.Buffer.Text = checker.Count.ToString ();
 				if (testcase == checker.Count) {
 
 					operation.Push (false);
@@ -1213,7 +1241,7 @@ public partial class MainWindow: Gtk.Window
 				checker.Clear ();
 				testcase = 0;
 
-			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("ALL")) { //ALL OF
+			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("ALL") && operation.Count != 0) { //ALL OF
 				while (!operation.Peek ().Equals ("MKAY")) {
 					checker.Push (operation.Pop ());
 				}
@@ -1222,7 +1250,7 @@ public partial class MainWindow: Gtk.Window
 
 				foreach (object test in checker) {
 					if (!Convert.ToBoolean (test)) { //If one of them is false, return FAIL
-						operation.Push(false);
+						operation.Push (false);
 						trueorfalse++;
 
 					}
@@ -1236,7 +1264,7 @@ public partial class MainWindow: Gtk.Window
 				i++;
 				checker.Clear ();
 
-			} else if (slice [i].Equals ("SAEM") && slice [i + 1].Equals ("BOTH")) { //Equality checker
+			} else if (slice [i].Equals ("SAEM") && slice [i + 1].Equals ("BOTH") && operation.Count != 0) { //Equality checker
 
 				object1 = operation.Pop ();
 				object2 = operation.Pop ();
@@ -1253,7 +1281,7 @@ public partial class MainWindow: Gtk.Window
 
 				i++; //Skips the following BOTH and disregards it as a keyword not as a variable.
 
-			} else if (slice [i].Equals ("DIFFRINT")) { //Inequality checker
+			} else if (slice [i].Equals ("DIFFRINT") && operation.Count != 0) { //Inequality checker
 
 				object1 = operation.Pop ();
 				object2 = operation.Pop ();
@@ -1267,16 +1295,15 @@ public partial class MainWindow: Gtk.Window
 					operation.Push (true);
 				}
 
-			} else if (slice[i].Equals("MKAY")){ //Any and All of delimiter
-				operation.Push("MKAY");
-			} else if (slice[i].Equals("AN")||slice[i].Equals("OF")) { //Disregard these keywords
-			} 
-			else if (slice[i].Equals("WIN") || slice[i].Equals("FAIL")) { //Boolean literal
+			} else if (slice [i].Equals ("MKAY")) { //Any and All of delimiter
+				operation.Push ("MKAY");
+			} else if (slice [i].Equals ("AN") || slice [i].Equals ("OF")) { //Disregard these keywords
+			} else if (slice [i].Equals ("WIN") || slice [i].Equals ("FAIL")) { //Boolean literal
 				if (slice [i].Equals ("WIN"))
 					op1 = true;
 				else
 					op1 = false;
-				operation.Push(op1);
+				operation.Push (op1);
 
 
 
@@ -1285,42 +1312,41 @@ public partial class MainWindow: Gtk.Window
 
 			} else if (isNumb (slice [i], numb) && !isVar (slice [i], vari)) { //Number literal
 				opd1 = Convert.ToDouble (slice [i]);
-				operation.Push(opd1);
+				operation.Push (opd1);
 
 
 
 			} else if (isVar (slice [i], vari)) { //Variable value
-				label1.Text = slice[i].ToString();
+				//label1.Text = slice[i].ToString();
 				try {
-					if (varList[slice[i]].ToString().Equals("WIN")){
+					if (varList [slice [i]].ToString ().Equals ("WIN")) {
 						op1 = true;
-						operation.Push(op1);
-					} else if (varList[slice[i]].ToString().Equals("FAIL")){
+						operation.Push (op1);
+					} else if (varList [slice [i]].ToString ().Equals ("FAIL")) {
 						op1 = false;
-						operation.Push(op1);
-					} else if (isNumb(varList[slice[i]].ToString(), numb)){
+						operation.Push (op1);
+					} else if (isNumb (varList [slice [i]].ToString (), numb)) {
 						try {
-							opd1 = Convert.ToDouble (varList[slice [i]]);
-							operation.Push(opd1);
+							opd1 = Convert.ToDouble (varList [slice [i]]);
+							operation.Push (opd1);
+						} catch (FormatException) {
+							consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
+							return "Error";
 						}
-						catch (FormatException){
-							consoletext.Buffer.InsertAtCursor ("Unable to cast value");
-
-						}
-					} else{ //String
-						operation.Push("\""+varList[slice[i]].ToString()+"\"");
+					} else { //String
+						operation.Push ("\"" + varList [slice [i]].ToString () + "\"");
 
 					}
 
 
-				}
-				catch (Exception){
-					consoletext.Buffer.InsertAtCursor ("Unable to cast value");
+				} catch (Exception) {
+
+					consoletext.Buffer.InsertAtCursor ("Syntax Error at linenumber "+linenumber+": Unable to cast value\n");
 					return "Error";
 				}
 
-
-			} 
+			
+			}
 
 		}
 
