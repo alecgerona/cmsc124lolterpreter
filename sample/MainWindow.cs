@@ -373,6 +373,7 @@ public partial class MainWindow: Gtk.Window
 						commentline++;
 
 					}
+
 				} catch (Exception) {
 					syntaxError (commentline);
 					break;
@@ -382,8 +383,9 @@ public partial class MainWindow: Gtk.Window
 
 				lex.AppendValues ("TDLR", library ["TLDR"]);
 
-
 				treeview1.Model = lex;
+
+
 
 			} else if (endmatch.Success) { //Matched KTHXBYE token
 				lex.AppendValues (endmatch.Groups [1].ToString (), library ["KTHXBYE"]);
@@ -529,6 +531,10 @@ public partial class MainWindow: Gtk.Window
 		//Check for variable redefinitions
 		if (varList.Contains(m.Groups[2].ToString())){
 			consoletext.Buffer.InsertAtCursor ("Redefinition of existing variable at: " + m.Groups [2].ToString () + " at line "+linenumber+".");
+			return;
+		}
+		else if (m.Groups [2].ToString ().Equals ("HAI") || m.Groups [2].ToString ().Equals ("AN")) {
+			consoletext.Buffer.InsertAtCursor ("Syntax Error at line:"+linenumber+": Invalid variable name\n");
 			return;
 		}
 
