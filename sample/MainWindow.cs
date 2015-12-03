@@ -533,7 +533,7 @@ public partial class MainWindow: Gtk.Window
 			consoletext.Buffer.InsertAtCursor ("Redefinition of existing variable at: " + m.Groups [2].ToString () + " at line "+linenumber+".");
 			return;
 		}
-		else if (m.Groups [2].ToString ().Equals ("HAI") || m.Groups [2].ToString ().Equals ("AN")) {
+		else if (m.Groups [2].ToString ().Equals ("HAI") || m.Groups [2].ToString ().Equals ("AN") || m.Groups [2].ToString ().Equals ("KTHXBYE")) {
 			consoletext.Buffer.InsertAtCursor ("Syntax Error at line:"+linenumber+": Invalid variable name\n");
 			return;
 		}
@@ -1030,25 +1030,26 @@ public partial class MainWindow: Gtk.Window
 		Array.Reverse (slice);
 
 		for (int i = 0; i<slice.Length-caller; i++) {
-			if (slice [i].Equals ("OF") && slice [i + 1].Equals ("BOTH")) { //AND
+			if (slice [i].Equals ("OF") && slice [i + 1].Equals ("BOTH") && operation.Count >1) { //AND
 				op1 = Convert.ToBoolean (operation.Pop ());
+
 				op2 = Convert.ToBoolean (operation.Pop ());
 				operation.Push (op1 && op2);
 				i++; //Skips the following BOTH and disregards it as a keyword not as a variable.
 
-			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("EITHER")) { //OR
+			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("EITHER") && operation.Count > 1) { //OR
 
 				op1 = Convert.ToBoolean (operation.Pop ());
 				op2 = Convert.ToBoolean (operation.Pop ());
 				operation.Push (op1 || op2);
 				i++;
-			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("WON")) { //XOR
+			} else if (slice [i].Equals ("OF") && slice [i + 1].Equals ("WON") && operation.Count > 1) { //XOR
 
 				op1 = Convert.ToBoolean (operation.Pop ());
 				op2 = Convert.ToBoolean (operation.Pop ());
 				operation.Push (op1 ^ op2);
 				i++;
-			} else if (slice [i].Equals ("NOT")) { //NEGATION
+			} else if (slice [i].Equals ("NOT") && operation.Count > 0) { //NEGATION
 
 				op1 = Convert.ToBoolean (operation.Pop ());
 				operation.Push (!op1);
