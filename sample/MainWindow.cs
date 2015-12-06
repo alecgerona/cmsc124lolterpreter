@@ -986,7 +986,7 @@ public partial class MainWindow: Gtk.Window
 		Regex numb =new Regex (numregex);
 		for (int i = caller; i < splitarray.Length; i++) { //Add to lexemes table
 			if (splitarray [i].Equals ("BOTH") || splitarray [i].Equals ("EITHER")|| splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") && splitarray [i + 1].Equals ("OF")) {
-				lex.AppendValues (splitarray [i], library[splitarray[i] + " " + splitarray[i+1]]);
+				lex.AppendValues (splitarray [i] + " " + splitarray[i+1], library[splitarray[i] + " " + splitarray[i+1]]);
 			} else if (splitarray[i].Equals("NOT")) {
 
 				lex.AppendValues (splitarray [i], "Negation Operator");
