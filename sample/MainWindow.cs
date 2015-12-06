@@ -471,7 +471,7 @@ public partial class MainWindow: Gtk.Window
 						sym.AppendValues (key, varList [key]);
 					}
 
-					satisfy = false;
+					satisfy = false; //Make false to find an OMG that will make this true
 
 
 				} else {
@@ -509,8 +509,10 @@ public partial class MainWindow: Gtk.Window
 				}
 				
 			} else if (codearray [i].Contains ("GTFO")) { //Break function
-				satisfy = false;
-				gtfo = true;
+				if (satisfy){
+					satisfy = false;
+					gtfo = true;
+				}
 			}
 			else if (codearray [i].Contains ("NO WAI")) {
 				if (satisfy) {
