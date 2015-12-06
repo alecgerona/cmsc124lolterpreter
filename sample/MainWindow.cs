@@ -686,6 +686,10 @@ public partial class MainWindow: Gtk.Window
 	}
 
 	protected void assignment(Match assmatch, String[] codearray, int linenumber, ListStore lex){
+		if (!varList.Contains(assmatch.Groups[1].ToString())){ //No declared variable
+			consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".");
+			return;
+		}
 		int caller;
 		Gtk.ListStore sym = new Gtk.ListStore (typeof (string), typeof (string));
 		string variregex = "([a-zA-Z][a-zA-Z0-9]*)";
