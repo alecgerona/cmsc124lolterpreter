@@ -608,6 +608,10 @@ public partial class MainWindow: Gtk.Window
 				sym.AppendValues(m.Groups[2].ToString(), perform(codearray[linenumber-1], linenumber, caller).ToString());
 				symboltreeview.Model = sym;
 
+				//Add to the lexemes table
+				splitarray = codearray [linenumber - 1].Split (' ');
+				lexemeprinter (splitarray, caller, lex);
+
 
 
 			} else if (isAnyAll(m.Groups[4].ToString())) { //ANY ALL & AND ALL Boolean operations
