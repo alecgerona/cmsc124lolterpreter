@@ -51,6 +51,8 @@ public partial class MainWindow: Gtk.Window
 		library.Add ("number", "Number Literal");
 		library.Add ("variable", "Variable");
 		library.Add ("MKAY", "ANY OF and ALL OF delimiter");
+		library.Add ("ANY OF", "Multiple OR operator");
+		library.Add ("ALL OF", "Multiple AND operator");
 		varList.Add ("IT", ""); //Create LOLCODE's implicit variable, IT.
 
 
@@ -990,16 +992,20 @@ public partial class MainWindow: Gtk.Window
 		Regex vari = new Regex (variregex);
 		Regex numb =new Regex (numregex);
 		for (int i = caller; i < splitarray.Length; i++) { //Add to lexemes table
-			if (splitarray [i].Equals ("BOTH") || splitarray [i].Equals ("EITHER")|| splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") && splitarray [i + 1].Equals ("OF")) {
-				lex.AppendValues (splitarray [i] + " " + splitarray[i+1], library[splitarray[i] + " " + splitarray[i+1]]);
-			} else if (splitarray[i].Equals("NOT")) {
+			if (splitarray [i].Equals ("BOTH") || splitarray [i].Equals ("EITHER") || splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") || splitarray [i].Equals ("ANY") || splitarray [i].Equals ("ALL") && splitarray [i + 1].Equals ("OF")) {
+				lex.AppendValues (splitarray [i] + " " + splitarray [i + 1], library [splitarray [i] + " " + splitarray [i + 1]]);
+			} else if (splitarray [i].Equals ("NOT")) {
 
 				lex.AppendValues (splitarray [i], "Negation Operator");
 
 			} else if (splitarray [i].Equals ("AN")) {
 				lex.AppendValues ("AN", "Value Conjunction");
 			} else if (splitarray [i].Equals ("OF")) {
-			} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
+			} else if (splitarray [i].Equals ("MKAY")) {
+				lex.AppendValues ("MKAY", library ["MKAY"]);
+			}
+
+			else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
 				lex.AppendValues(splitarray[i], library["number"]);
 
 			} else if (isVar (splitarray [i], vari)) {
