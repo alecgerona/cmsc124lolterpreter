@@ -620,6 +620,10 @@ public partial class MainWindow: Gtk.Window
 				sym.AppendValues(m.Groups[2].ToString(), perform(codearray[linenumber-1], linenumber, caller).ToString());
 				symboltreeview.Model = sym;
 
+				//Add to the lexemes table
+				splitarray = codearray [linenumber - 1].Split (' ');
+				lexemeprinter (splitarray, caller, lex);
+
 
 
 			} else if (isBool(m.Groups[4].ToString())) { //Boolean operations
