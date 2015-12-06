@@ -564,7 +564,7 @@ public partial class MainWindow: Gtk.Window
 
 		for (int i = 1; i < splitarray.Count(); i++) {
 			if (!splitarray[i].Equals("AN") && !splitarray[i].Equals("MKAY")){
-				concatvar = concatvar + splitarray[i];
+				concatvar = concatvar + splitarray[i] + " ";
 			}
 		}
 		return concatvar;
@@ -587,7 +587,7 @@ public partial class MainWindow: Gtk.Window
 
 		//Check for variable redefinitions
 		if (varList.Contains(m.Groups[2].ToString())){
-			consoletext.Buffer.InsertAtCursor ("Redefinition of existing variable at: " + m.Groups [2].ToString () + " at line "+linenumber+".");
+			consoletext.Buffer.InsertAtCursor ("Redefinition of existing variable at: " + m.Groups [2].ToString () + " at line "+linenumber+".\n");
 			return;
 		}
 		else if (m.Groups [2].ToString ().Equals ("HAI") || m.Groups [2].ToString ().Equals ("AN") || m.Groups [2].ToString ().Equals ("KTHXBYE")) {
@@ -614,7 +614,7 @@ public partial class MainWindow: Gtk.Window
 			} else if (isVar (m.Groups [4].ToString (), vari) && !isString (m.Groups [4].ToString (), str) && !isOps (m.Groups [4].ToString (), ops) && !m.Groups [4].ToString ().Equals ("WIN") && !m.Groups [4].ToString ().Equals ("FAIL") && !isBool (m.Groups [4].ToString ()) && !isAnyAll (m.Groups [4].ToString ()) && !isComparison (m.Groups [4].ToString ())) { //Assign the value of an existing variable.
 				//Check whether the source variable exists
 				if (!varList.Contains (m.Groups [4].ToString ())) {//No variable
-					consoletext.Buffer.InsertAtCursor (library ["noVariable"] + m.Groups [4].ToString () + " at line " + linenumber + ".");
+					consoletext.Buffer.InsertAtCursor (library ["noVariable"] + m.Groups [4].ToString () + " at line " + linenumber + ".\n");
 					return;
 				}
 
@@ -716,7 +716,7 @@ public partial class MainWindow: Gtk.Window
 
 	protected void assignment(Match assmatch, String[] codearray, int linenumber, ListStore lex){
 		if (!varList.Contains(assmatch.Groups[1].ToString())){ //No declared variable
-			consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".");
+			consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".\n");
 			return;
 		}
 		int caller;
@@ -747,12 +747,12 @@ public partial class MainWindow: Gtk.Window
 		} else if (isVar (assmatch.Groups [3].ToString (), vari) && !isString (assmatch.Groups [3].ToString (), str) && !isOps (assmatch.Groups [3].ToString (), ops) && !assmatch.Groups [3].ToString ().Equals ("WIN") && !assmatch.Groups [3].ToString ().Equals ("FAIL") && !isBool (assmatch.Groups [3].ToString ()) && !isAnyAll (assmatch.Groups [3].ToString ()) && !isComparison (assmatch.Groups [3].ToString ())) { //Assign the value of an existing variable.
 			//Check whether the source variable exists
 			if (!varList.Contains (assmatch.Groups [3].ToString ())) {//No variable
-				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [3].ToString () + " at line " + linenumber + ".");
+				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [3].ToString () + " at line " + linenumber + ".\n");
 				return;
 			}
 			//Check whether the destination variable exists
 			if (!varList.Contains(assmatch.Groups[1].ToString())){ //No variable
-				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [3].ToString () + " at line " + linenumber + ".");
+				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [3].ToString () + " at line " + linenumber + ".\n");
 				return;
 			}
 			sym.Clear ();
@@ -770,7 +770,7 @@ public partial class MainWindow: Gtk.Window
 		} else if (isString (assmatch.Groups [3].ToString (), str) && !isOps (assmatch.Groups [3].ToString (), ops)) { //Assigns a string to the destination variable
 			//Check whether the destination variable exists
 			if (!varList.Contains(assmatch.Groups[1].ToString())){ //No variable
-				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".");
+				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".\n");
 				return;
 			}
 
@@ -794,7 +794,7 @@ public partial class MainWindow: Gtk.Window
 		} else if (assmatch.Groups [3].ToString ().Equals ("WIN") || assmatch.Groups [3].ToString ().Equals ("FAIL")) { //Boolean
 			//Check whether the destination variable exists
 			if (!varList.Contains(assmatch.Groups[1].ToString())){ //No variable
-				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".");
+				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + assmatch.Groups [1].ToString () + " at line " + linenumber + ".\n");
 				return;
 			}
 			sym.Clear ();
@@ -907,7 +907,7 @@ public partial class MainWindow: Gtk.Window
 		} else if (isVar (printmatch.Groups [2].ToString (), vari) && !isString (printmatch.Groups [2].ToString (), str) && !isOps (printmatch.Groups [2].ToString (), ops) && !printmatch.Groups [2].ToString ().Equals ("WIN") && !printmatch.Groups [2].ToString ().Equals ("FAIL") && !isBool (printmatch.Groups [2].ToString ()) && !isAnyAll (printmatch.Groups [2].ToString ()) && !isComparison (printmatch.Groups [2].ToString ())) { //Assign the value of an existing variable.
 			//Check whether the source variable exists
 			if (!varList.Contains (printmatch.Groups [2].ToString ())) {//No variable
-				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + printmatch.Groups [3].ToString () + " at line " + linenumber + ".");
+				consoletext.Buffer.InsertAtCursor (library ["noVariable"] + printmatch.Groups [3].ToString () + " at line " + linenumber + ".\n");
 				return;
 			}
 
