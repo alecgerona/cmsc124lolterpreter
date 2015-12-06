@@ -168,6 +168,7 @@ public partial class MainWindow: Gtk.Window
 		string endregex = @"^\s*(KTHXBYE)\s*$";
 		string endcommentregex = @"(TLDR)\s*$";
 		string numvarwtfregex = @"(([a-zA-Z][a-zA-Z0-9]*), WTF?)|((-?[0-9]*\.?[0-9]+), WTF?)";
+		string switchcaseregex = @"(.+), WTF\?";
 
 		string addregex = @"^\s*(SUM OF)";
 		string subregex = @"^\s*(DIFF OF)";
@@ -224,6 +225,7 @@ public partial class MainWindow: Gtk.Window
 		Regex anyof = new Regex (anyofregex);
 		Regex bothsaem = new Regex (bothsaemregex);
 		Regex diffrint = new Regex (diffrintregex);
+		Regex switchcase = new Regex (switchcaseregex);
 
 		//Data type regexes
 		Regex numvarwtf = new Regex(numvarwtfregex);
@@ -248,6 +250,7 @@ public partial class MainWindow: Gtk.Window
 		int commentline = 0;
 		bool satisfy = true;
 		bool gtfo = false;
+		bool mebbe = false;
 		int startpoint = 0;
 		int endpoint = 0;
 		int ifcaller = 0;
@@ -402,8 +405,8 @@ public partial class MainWindow: Gtk.Window
 				treeview1.Model = lex;
 
 			} else if (codearray [i].Contains ("MEBBE")) {//Else if
-				if (!satisfy) { //If satisfy is false which means previous conditions were denied, then execute
-
+				if (!satisfy && !mebbe) { //If satisfy is false which means previous conditions were denied, then execute
+					mebbe = true;
 					sym.Clear ();
 					symboltreeview.Model = sym;
 					varList ["IT"] = perform (codearray [i].ToString ().Replace ("MEBBE ", ""), i + 1, 0); //Evaluate if condition
@@ -423,7 +426,7 @@ public partial class MainWindow: Gtk.Window
 
 				}
 
-			} else if (addmatch.Success || submatch.Success || mulmatch.Success || divmatch.Success || modmatch.Success || bigmatch.Success || smallmatch.Success || bothmatch.Success || eithermatch.Success || wonmatch.Success || notmatch.Success || allofmatch.Success || anyofmatch.Success || bothsaemmatch.Success || diffrintmatch.Success || codearray [i].Contains ("WIN") || codearray [i].Contains ("FAIL")) { //Operations
+			} else if (addmatch.Success || submatch.Success || mulmatch.Success || divmatch.Success || modmatch.Success || bigmatch.Success || smallmatch.Success || bothmatch.Success || eithermatch.Success || wonmatch.Success || notmatch.Success || allofmatch.Success || anyofmatch.Success || bothsaemmatch.Success || diffrintmatch.Success || codearray [i].Contains ("WIN") || codearray [i].Contains ("FAIL") || codearray [i].Contains ("WTF?")) { //Operations
 				if (codearray [i].Contains ("O RLY?")) { //Testing for loop
 
 					sym.Clear ();
@@ -436,6 +439,7 @@ public partial class MainWindow: Gtk.Window
 
 					if (varList ["IT"].Equals ("WIN") || isNumb (varList ["IT"].ToString (), numb)) {
 						satisfy = true;
+						mebbe = true;
 					} else {
 						satisfy = false;
 					}
@@ -444,7 +448,23 @@ public partial class MainWindow: Gtk.Window
 				} else if (codearray [i].Contains ("WTF?")) { //Switch-case
 					sym.Clear ();
 					symboltreeview.Model = sym;
-					varList ["IT"] = perform (codearray [i].ToString ().Replace (", WTF?", ""), i + 1, 0); //Evaluate if condition
+					//Check whether expression is a number.
+					Match switchcasematch = switchcase.Match(codearray[i]);
+					if (isNumb (switchcasematch.Groups [1].ToString (), numb) && switchcasematch.Success && !isOperation(switchcasematch.Groups [1].ToString ())) {
+						varList ["IT"] = switchcasematch.Groups [1].ToString ();
+					} else if (switchcasematch.Success && !isOperation(switchcasematch.Groups [1].ToString ())) { //Is variable?
+						try {
+							varList ["IT"] = varList [switchcasematch.Groups [1].ToString ()];
+						} catch (Exception) {
+							consoletext.Buffer.InsertAtCursor (library ["noVariable"] + switchcasematch.Groups [1].ToString () + " at line " + linenumber + ".");
+						}
+					} else { //Is operation?
+						varList ["IT"] = perform (codearray [i].ToString ().Replace (", WTF?", ""), i + 1, 0); //Evaluate switch case operation
+					}
+
+
+
+
 					if (varList ["IT"].ToString ().Equals ("Error"))
 						return;
 					foreach (string key in varList.Keys) {
@@ -1335,7 +1355,7 @@ public partial class MainWindow: Gtk.Window
 
 
 	protected bool isOperation (string value){
-		if (value.Equals ("SUM") || value.Equals ("DIFF") || value.Equals ("PRODUKT") || value.Equals ("QUOSHUNT") || value.Equals ("MOD") || value.Equals ("BIGGR") || value.Equals ("SMALLR")) {
+		if (value.Contains ("SUM") || value.Contains ("DIFF") || value.Contains ("PRODUKT") || value.Contains ("QUOSHUNT") || value.Contains ("MOD") || value.Contains ("BIGGR") || value.Contains ("SMALLR")) {
 			return true;
 		} else
 			return false;
