@@ -96,10 +96,7 @@ public partial class MainWindow: Gtk.Window
 		// Create a model that will hold two strings - lexeme and classification
 		Gtk.ListStore symbol = new Gtk.ListStore (typeof (string), typeof (string));
 
-		// Add some data to the store
-		symbol.AppendValues ("Sample Identifier", "1");
-		symbol.AppendValues ("Sample Identifier 2", "2");
-		symbol.AppendValues ("Sample Identifier 3", "3");
+	
 
 		// Assign the model to the TreeView
 		symboltreeview.Model = symbol;
@@ -135,10 +132,6 @@ public partial class MainWindow: Gtk.Window
 		// Create a model that will hold two strings - lexeme and classification
 		Gtk.ListStore lex = new Gtk.ListStore (typeof (string), typeof (string));
 
-		// Add some data to the store
-		lex.AppendValues ("HAI", "Code Definition");
-		lex.AppendValues ("HAI", "Code Definition");
-		lex.AppendValues ("HAI", "Code Definition");
 
 		// Assign the model to the TreeView
 		treeview1.Model = lex;
