@@ -630,26 +630,7 @@ public partial class MainWindow: Gtk.Window
 
 				//Add to the lexemes table
 				splitarray = codearray [linenumber - 1].Split (' ');
-				for (int i = caller; i < splitarray.Length; i++) { //Add to lexemes table
-					if (splitarray [i].Equals ("BOTH") || splitarray [i].Equals ("EITHER") && splitarray [i + 1].Equals ("OF")) {
-						lex.AppendValues (splitarray [i], library[splitarray[i] + " " + splitarray[i+1]]);
-					} else if (splitarray[i].Equals("NOT")) {
-
-						lex.AppendValues (splitarray [i], "Negation Operator");
-
-					} else if (splitarray [i].Equals ("AN")) {
-						lex.AppendValues ("AN", "Value Conjunction");
-					} else if (splitarray [i].Equals ("OF")) {
-					} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
-						lex.AppendValues(splitarray[i], library["number"]);
-
-					} else if (isVar (splitarray [i], vari)) {
-						lex.AppendValues(splitarray[i], library["variable"]);
-
-					}
-
-				}
-				treeview1.Model = lex;
+				lexemeprinter (splitarray, caller, lex);
 
 
 
