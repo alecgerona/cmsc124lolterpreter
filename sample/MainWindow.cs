@@ -53,6 +53,8 @@ public partial class MainWindow: Gtk.Window
 		library.Add ("MKAY", "ANY OF and ALL OF delimiter");
 		library.Add ("ANY OF", "Multiple OR operator");
 		library.Add ("ALL OF", "Multiple AND operator");
+		library.Add ("BOTH SAEM", "Equality operator");
+		library.Add ("DIFFRINT", "Inequality operator");
 		varList.Add ("IT", ""); //Create LOLCODE's implicit variable, IT.
 
 
@@ -937,6 +939,10 @@ public partial class MainWindow: Gtk.Window
 			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
 
+			//Add to the lexemes table
+			splitarray = codearray [linenumber - 1].Split (' ');
+			lexemeprinter (splitarray, caller, lex);
+
 
 
 		} else if (isAnyAll(printmatch.Groups[2].ToString())) { //ANY ALL & AND ALL Boolean operations
@@ -1000,9 +1006,13 @@ public partial class MainWindow: Gtk.Window
 
 			} else if (splitarray [i].Equals ("AN")) {
 				lex.AppendValues ("AN", "Value Conjunction");
-			} else if (splitarray [i].Equals ("OF")) {
+			} else if (splitarray [i].Equals ("OF") || splitarray[i].Equals("SAEM")) {
 			} else if (splitarray [i].Equals ("MKAY")) {
 				lex.AppendValues ("MKAY", library ["MKAY"]);
+			} else if (splitarray [i].Equals ("BOTH") && splitarray [i + 1].Equals ("SAEM")) {
+				lex.AppendValues ("BOTH SAEM", library ["BOTH SAEM"]);
+			} else if (splitarray [i].Equals ("DIFFRINT")) {
+				lex.AppendValues ("DIFFRINT", library ["DIFFRINT"]);
 			}
 
 			else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
