@@ -659,23 +659,10 @@ public partial class MainWindow: Gtk.Window
 				varList.Add(m.Groups[2].ToString(), perform(codearray[linenumber-1], linenumber, caller).ToString());
 				sym.AppendValues(m.Groups[2].ToString(), perform(codearray[linenumber-1], linenumber, caller).ToString());
 				symboltreeview.Model = sym;
+
+				//Add to the lexemes table
 				splitarray = codearray [linenumber - 1].Split (' ');
-				for (int i = 5; i < splitarray.Length; i++) { //Add to lexemes table
-					if (splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") && splitarray [i + 1].Equals ("OF")) {
-						lex.AppendValues (splitarray [i]+" "+splitarray[i+1], library [splitarray [i]+" "+splitarray[i+1]]);
-					} else if (splitarray [i].Equals ("AN")) {
-						lex.AppendValues ("AN", "Value Conjunction");
-					} else if (splitarray [i].Equals ("OF")) {
-					} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
-						lex.AppendValues(splitarray[i], library["number"]);
-
-					} else if (isVar (splitarray [i], vari)) {
-						lex.AppendValues(splitarray[i], library["variable"]);
-
-					}
-
-				}
-				treeview1.Model = lex;
+				lexemeprinter (splitarray, caller, lex);
 			}
 
 		} else {
@@ -779,6 +766,7 @@ public partial class MainWindow: Gtk.Window
 				sym.AppendValues (key, varList [key]);
 			}
 			treeview1.Model = lex;
+
 
 
 
