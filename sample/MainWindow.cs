@@ -1421,16 +1421,33 @@ public partial class MainWindow: Gtk.Window
 	}
 
 
-	protected void OnFilechooserbutton1FileActivated (object sender, EventArgs e)
-	{
-		
-	}
-
-
 	protected void OnButton3Clicked (object sender, EventArgs e)
 	{
 		waitingForInput = false;
 
+	}
+
+
+	protected void OnButton1Clicked (object sender, EventArgs e)
+	{
+		
+		Gtk.FileChooserDialog filechooser = new Gtk.FileChooserDialog("Select the file to open", this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Open", ResponseType.Accept);
+		filechooser.SelectMultiple = false;
+		textview1.Buffer.Clear ();
+
+		if (filechooser.Run() == (int)ResponseType.Accept) 
+		{
+			System.IO.FileStream fileStream = System.IO.File.OpenRead(filechooser.Filename);
+			System.IO.StreamReader streamReader = new StreamReader (fileStream);
+
+			string file = streamReader.ReadToEnd ();
+
+			textview1.Buffer.InsertAtCursor (file);
+			fileStream.Close();
+
+		}
+
+		filechooser.Destroy();
 	}
 
 
