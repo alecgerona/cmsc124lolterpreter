@@ -957,26 +957,9 @@ public partial class MainWindow: Gtk.Window
 
 			//Add to the lexemes table
 			splitarray = codearray [linenumber - 1].Split (' ');
-			for (int i = 2; i < splitarray.Length; i++) { //Add to lexemes table
-				if (splitarray [i].Equals ("BOTH") || splitarray [i].Equals ("EITHER") && splitarray [i + 1].Equals ("OF")) {
-					lex.AppendValues (splitarray [i], library[splitarray[i] + " " + splitarray[i+1]]);
-				} else if (splitarray[i].Equals("NOT")) {
+			lexemeprinter (splitarray, caller, lex);
 
-					lex.AppendValues (splitarray [i], "Negation Operator");
 
-				} else if (splitarray [i].Equals ("AN")) {
-					lex.AppendValues ("AN", "Value Conjunction");
-				} else if (splitarray [i].Equals ("OF")) {
-				} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
-					lex.AppendValues(splitarray[i], library["number"]);
-
-				} else if (isVar (splitarray [i], vari)) {
-					lex.AppendValues(splitarray[i], library["variable"]);
-
-				}
-
-			}
-			treeview1.Model = lex;
 
 
 
@@ -991,23 +974,37 @@ public partial class MainWindow: Gtk.Window
 
 
 			splitarray = codearray [linenumber - 1].Split (' ');
-			for (int i = caller; i < splitarray.Length; i++) { //Add to lexemes table
-				if (splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") && splitarray [i + 1].Equals ("OF")) {
-					lex.AppendValues (splitarray [i]+" "+splitarray[i+1], library [splitarray [i]+" "+splitarray[i+1]]);
-				} else if (splitarray [i].Equals ("AN")) {
-					lex.AppendValues ("AN", "Value Conjunction");
-				} else if (splitarray [i].Equals ("OF")) {
-				} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
-					lex.AppendValues(splitarray[i], library["number"]);
-
-				} else if (isVar (splitarray [i], vari)) {
-					lex.AppendValues(splitarray[i], library["variable"]);
-
-				}
-
-			}
+			lexemeprinter (splitarray, caller, lex);
 			treeview1.Model = lex;
 		}
+	}
+
+	protected void lexemeprinter(string[] splitarray, int caller, ListStore lex){
+		string variregex = "([a-zA-Z][a-zA-Z0-9]*)";
+		string numregex = @"(-?[0-9]*\.?[0-9]+)";
+		Regex vari = new Regex (variregex);
+		Regex numb =new Regex (numregex);
+		for (int i = caller; i < splitarray.Length; i++) { //Add to lexemes table
+			if (splitarray [i].Equals ("BOTH") || splitarray [i].Equals ("EITHER")|| splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") && splitarray [i + 1].Equals ("OF")) {
+				lex.AppendValues (splitarray [i], library[splitarray[i] + " " + splitarray[i+1]]);
+			} else if (splitarray[i].Equals("NOT")) {
+
+				lex.AppendValues (splitarray [i], "Negation Operator");
+
+			} else if (splitarray [i].Equals ("AN")) {
+				lex.AppendValues ("AN", "Value Conjunction");
+			} else if (splitarray [i].Equals ("OF")) {
+			} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
+				lex.AppendValues(splitarray[i], library["number"]);
+
+			} else if (isVar (splitarray [i], vari)) {
+				lex.AppendValues(splitarray[i], library["variable"]);
+
+			}
+
+		}
+		treeview1.Model = lex;
+		
 	}
 
 
