@@ -390,7 +390,8 @@ public partial class MainWindow: Gtk.Window
 					break;
 				}
 
-				i = commentline;
+				i = commentline-1;
+				linenumber = i+1;
 
 				lex.AppendValues ("TDLR", library ["TLDR"]);
 
@@ -958,9 +959,6 @@ public partial class MainWindow: Gtk.Window
 
 			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
-
-
-
 
 			//Add to the lexemes table
 			splitarray = codearray [linenumber - 1].Split (' ');
