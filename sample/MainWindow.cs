@@ -50,6 +50,7 @@ public partial class MainWindow: Gtk.Window
 		library.Add ("ITZ", "Assignment Indicator");
 		library.Add ("number", "Number Literal");
 		library.Add ("variable", "Variable");
+		library.Add ("MKAY", "ANY OF and ALL OF delimiter");
 		varList.Add ("IT", ""); //Create LOLCODE's implicit variable, IT.
 
 
@@ -941,6 +942,10 @@ public partial class MainWindow: Gtk.Window
 			caller = 1;
 			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
+
+			//Add to the lexemes table
+			splitarray = codearray [linenumber - 1].Split (' ');
+			lexemeprinter (splitarray, caller, lex);
 
 
 
