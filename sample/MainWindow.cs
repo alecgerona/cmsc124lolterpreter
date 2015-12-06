@@ -186,7 +186,7 @@ public partial class MainWindow: Gtk.Window
 		string anyofregex = @"^\s*(ANY OF)";
 		string bothsaemregex = @"^\s*(BOTH SAEM)";
 		string diffrintregex = @"^\s*(DIFFRINT)";
-		string smooshregex = "(DIFF OF) (\")(.*)(\") (AN) (\")(.*)(\")";
+		string smooshregex = @"^\s*(SMOOSH)";
 		string gimmehregex = "(GIMMEH) ([a-zA-Z][a-zA-Z0-9]*)";
 		string assregex = "([a-zA-Z][a-zA-Z0-9]*) (R) (.*)";
 		string variregex = "([a-zA-Z][a-zA-Z0-9]*)";
@@ -226,6 +226,7 @@ public partial class MainWindow: Gtk.Window
 		Regex bothsaem = new Regex (bothsaemregex);
 		Regex diffrint = new Regex (diffrintregex);
 		Regex switchcase = new Regex (switchcaseregex);
+		Regex smoosh = new Regex (smooshregex);
 
 		//Data type regexes
 		Regex numvarwtf = new Regex(numvarwtfregex);
@@ -293,6 +294,7 @@ public partial class MainWindow: Gtk.Window
 			Match bothsaemmatch = bothsaem.Match (codearray[i]);
 			Match diffrintmatch = diffrint.Match (codearray[i]);
 			Match numvarwtfmatch = numvarwtf.Match (codearray [i]);
+			Match smooshmatch = smoosh.Match (codearray [i]);
 
 
 
@@ -403,6 +405,19 @@ public partial class MainWindow: Gtk.Window
 					return;
 				}
 				treeview1.Model = lex;
+
+			} else if (smooshmatch.Success) { //Matched SMOOSH token
+
+				if (satisfy) {
+					sym.Clear ();
+					symboltreeview.Model = sym;
+					varList["IT"] = combineyarn(codearray[i], i+1, lex);
+					if (varList ["IT"].ToString ().Equals ("Error"))
+						return;
+					foreach (string key in varList.Keys) {
+						sym.AppendValues (key, varList [key]);
+					}
+				}
 
 			} else if (codearray [i].Contains ("MEBBE")) {//Else if
 				if (!satisfy && !mebbe) { //If satisfy and mebbe are false which means previous conditions were denied, then execute
@@ -538,6 +553,21 @@ public partial class MainWindow: Gtk.Window
 
 
 
+	}
+
+	protected string combineyarn(String line, int linenumber, ListStore lex){
+		string concatvar = "";
+		string[] splitarray = line.Split (' ', '"');
+
+		lex.AppendValues (splitarray[0], "Yarn concatenation operator");
+		treeview1.Model = lex;
+
+		for (int i = 1; i < splitarray.Count(); i++) {
+			if (!splitarray[i].Equals("AN") && !splitarray[i].Equals("MKAY")){
+				concatvar = concatvar + splitarray[i];
+			}
+		}
+		return concatvar;
 	}
 
 	protected void ihasa(Match m, String[] codearray, int linenumber, ListStore lex, ListStore sym){
