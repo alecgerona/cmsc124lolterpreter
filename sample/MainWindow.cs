@@ -807,6 +807,10 @@ public partial class MainWindow: Gtk.Window
 				sym.AppendValues (key, varList [key]);
 			}
 
+			//Add to the lexemes table
+			splitarray = codearray [linenumber - 1].Split (' ');
+			lexemeprinter (splitarray, caller, lex);
+
 
 
 
