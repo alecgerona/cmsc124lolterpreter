@@ -315,7 +315,7 @@ public partial class MainWindow: Gtk.Window
 					break;
 				}
 			} else if (m.Success) { //Matched I HAS A token
-				ihasa (m, codearray, i + 1, lex);
+				ihasa (m, codearray, i + 1, lex, sym);
 
 
 
@@ -517,10 +517,8 @@ public partial class MainWindow: Gtk.Window
 
 	}
 
-	protected void ihasa(Match m, String[] codearray, int linenumber, ListStore lex){
+	protected void ihasa(Match m, String[] codearray, int linenumber, ListStore lex, ListStore sym){
 		int caller;
-		//Gtk.ListStore lex = new Gtk.ListStore (typeof (string), typeof (string));
-		Gtk.ListStore sym = new Gtk.ListStore (typeof (string), typeof (string));
 		string variregex = "([a-zA-Z][a-zA-Z0-9]*)";
 		string numregex = @"(-?[0-9]*\.?[0-9]+)";
 		string stringregex ="(\")(.*)(\")";
@@ -660,6 +658,7 @@ public partial class MainWindow: Gtk.Window
 			sym.AppendValues (m.Groups [2].ToString (), varList [m.Groups [2].ToString ()].ToString ());
 			symboltreeview.Model = sym;
 		}
+
 	}
 
 	protected void assignment(Match assmatch, String[] codearray, int linenumber, ListStore lex){

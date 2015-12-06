@@ -3,7 +3,7 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="sample/MainWindow.cs">
     <Files>
       <File FileName="sample/Program.cs" Line="1" Column="1" />
-      <File FileName="sample/MainWindow.cs" Line="600" Column="29" />
+      <File FileName="sample/MainWindow.cs" Line="613" Column="45" />
       <File FileName="sample/inputDialog.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
