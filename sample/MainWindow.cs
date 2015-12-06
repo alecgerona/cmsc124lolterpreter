@@ -405,8 +405,7 @@ public partial class MainWindow: Gtk.Window
 				treeview1.Model = lex;
 
 			} else if (codearray [i].Contains ("MEBBE")) {//Else if
-				if (!satisfy && !mebbe) { //If satisfy is false which means previous conditions were denied, then execute
-					mebbe = true;
+				if (!satisfy && !mebbe) { //If satisfy and mebbe are false which means previous conditions were denied, then execute
 					sym.Clear ();
 					symboltreeview.Model = sym;
 					varList ["IT"] = perform (codearray [i].ToString ().Replace ("MEBBE ", ""), i + 1, 0); //Evaluate if condition
@@ -421,9 +420,9 @@ public partial class MainWindow: Gtk.Window
 					} else {
 						satisfy = false;
 					}
-
-
-
+				} else {
+					satisfy = false; //Turn the switch off since a mebbe or an if already had a true condition.
+					mebbe = true; //Flag to tell NO WAI that a mebbe turned the switch off.
 				}
 
 			} else if (addmatch.Success || submatch.Success || mulmatch.Success || divmatch.Success || modmatch.Success || bigmatch.Success || smallmatch.Success || bothmatch.Success || eithermatch.Success || wonmatch.Success || notmatch.Success || allofmatch.Success || anyofmatch.Success || bothsaemmatch.Success || diffrintmatch.Success || codearray [i].Contains ("WIN") || codearray [i].Contains ("FAIL") || codearray [i].Contains ("WTF?")) { //Operations
@@ -517,8 +516,10 @@ public partial class MainWindow: Gtk.Window
 			else if (codearray [i].Contains ("NO WAI")) {
 				if (satisfy) {
 					satisfy = false; //If satisfy is true which means that YA RLY happened, switches off commands
-				} else if (!satisfy) {
+				} else if (!satisfy && !mebbe) { //Neither an if nor a mebbe had a true condition
 					satisfy = true; //YA RLY hasn't happened so code under NO WAI has to happen
+				} else { //A mebbe had a true condition turned the switch off so it should remain off.
+					satisfy = false;
 				}
 			} else if (codearray [i].Contains ("OIC")) {
 				satisfy = true;
