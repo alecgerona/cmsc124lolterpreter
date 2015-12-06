@@ -857,25 +857,9 @@ public partial class MainWindow: Gtk.Window
 				sym.AppendValues (key, varList [key]);
 			}
 
-
-
+			//Add to the lexemes table
 			splitarray = codearray [linenumber - 1].Split (' ');
-			for (int i = 2; i < splitarray.Length; i++) { //Add to lexemes table
-				if (splitarray [i].Equals ("SUM") || splitarray [i].Equals ("DIFF") || splitarray [i].Equals ("PRODUKT") || splitarray [i].Equals ("QUOSHUNT") || splitarray [i].Equals ("MOD") || splitarray [i].Equals ("BIGGR") || splitarray [i].Equals ("SMALLR") && splitarray [i + 1].Equals ("OF")) {
-					lex.AppendValues (splitarray [i]+" "+splitarray[i+1], library [splitarray [i]+" "+splitarray[i+1]]);
-				} else if (splitarray [i].Equals ("AN")) {
-					lex.AppendValues ("AN", "Value Conjunction");
-				} else if (splitarray [i].Equals ("OF")) {
-				} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
-					lex.AppendValues(splitarray[i], library["number"]);
-
-				} else if (isVar (splitarray [i], vari)) {
-					lex.AppendValues(splitarray[i], library["variable"]);
-
-				}
-
-			}
-			treeview1.Model = lex;
+			lexemeprinter (splitarray, caller, lex);
 		}
 	}
 
@@ -908,7 +892,6 @@ public partial class MainWindow: Gtk.Window
 				return;
 			}
 
-
 			consoletext.Buffer.InsertAtCursor (varList[printmatch.Groups [2].ToString ()].ToString()+"\n");
 
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
@@ -924,8 +907,6 @@ public partial class MainWindow: Gtk.Window
 			lex.AppendValues (isStr.Groups [3].ToString (), "String Delimiter");
 			consoletext.Buffer.InsertAtCursor (isStr.Groups [2].ToString ()+"\n");
 			treeview1.Model = lex;
-
-
 
 		} else if (printmatch.Groups [2].ToString ().Equals ("WIN") || printmatch.Groups [2].ToString ().Equals ("FAIL")) { //Boolean
 
@@ -943,8 +924,6 @@ public partial class MainWindow: Gtk.Window
 			splitarray = codearray [linenumber - 1].Split (' ');
 			lexemeprinter (splitarray, caller, lex);
 
-
-
 		} else if (isAnyAll(printmatch.Groups[2].ToString())) { //ANY ALL & AND ALL Boolean operations
 
 			caller = 1;
@@ -954,10 +933,6 @@ public partial class MainWindow: Gtk.Window
 			//Add to the lexemes table
 			splitarray = codearray [linenumber - 1].Split (' ');
 			lexemeprinter (splitarray, caller, lex);
-
-
-
-
 
 		} else if (isBool(printmatch.Groups[2].ToString())) { //Boolean operations
 			caller = 1;
@@ -972,19 +947,12 @@ public partial class MainWindow: Gtk.Window
 			splitarray = codearray [linenumber - 1].Split (' ');
 			lexemeprinter (splitarray, caller, lex);
 
-
-
-
-
 		} else { //Arithmetic Operations
 
 			caller = 1;
 
 			consoletext.Buffer.InsertAtCursor(perform (codearray [linenumber - 1], linenumber, caller).ToString ()+"\n");
 			lex.AppendValues (printmatch.Groups [1].ToString (), "Print Keyword");
-
-
-
 
 			splitarray = codearray [linenumber - 1].Split (' ');
 			lexemeprinter (splitarray, caller, lex);
@@ -1013,9 +981,7 @@ public partial class MainWindow: Gtk.Window
 				lex.AppendValues ("BOTH SAEM", library ["BOTH SAEM"]);
 			} else if (splitarray [i].Equals ("DIFFRINT")) {
 				lex.AppendValues ("DIFFRINT", library ["DIFFRINT"]);
-			}
-
-			else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
+			} else if (isNumb (splitarray [i], numb) && !isVar (splitarray [i], vari)) {
 				lex.AppendValues(splitarray[i], library["number"]);
 
 			} else if (isVar (splitarray [i], vari)) {
