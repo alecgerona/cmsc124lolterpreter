@@ -793,6 +793,10 @@ public partial class MainWindow: Gtk.Window
 				sym.AppendValues (key, varList [key]);
 			}
 
+			//Add to the lexemes table
+			splitarray = codearray [linenumber - 1].Split (' ');
+			lexemeprinter (splitarray, caller, lex);
+
 
 		} else if (isAnyAll(assmatch.Groups[3].ToString())) { //ANY ALL & AND ALL Boolean operations
 
